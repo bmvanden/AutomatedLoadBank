@@ -1,4 +1,4 @@
-# AutomatedLoadBank
+# Automated Load Bank
 Python user interface for Raspberry Pi driven automated load bank
 
 ### Project Abstract
