@@ -18,10 +18,9 @@ Set date for Wi-Fi access\
     
 Update software repositories & installed software\
   [TUTORIAL](https://www.raspberrypi.org/documentation/raspbian/updating.md)\
-  ```
-  sudo apt-get update
-  sudo apt-get dist-upgrade
-  ```
+  `sudo apt-get update`\
+  `sudo apt-get dist-upgrade`
+  
    
 Install "Matchbox" on-screen software keyboard\
   `sudo apt-get install matchbox-keyboard`
@@ -29,8 +28,6 @@ Install "Matchbox" on-screen software keyboard\
 Install TkInter
   
 ### Handy Features/Resources
-Display brightness
-
-`sudo bash -c "echo n > /sys/class/backlight/rpi_backlight/brightness"`
-
+Display brightness\
+`sudo bash -c "echo n > /sys/class/backlight/rpi_backlight/brightness"`\
 where 0 < n < 255 (255 is maximum brightness)
