@@ -19,7 +19,7 @@ Set date for Wi-Fi access\
 Update software repositories & installed software\
   [TUTORIAL](https://www.raspberrypi.org/documentation/raspbian/updating.md)\
   ```
-  sudo apt-get update\
+  sudo apt-get update
   sudo apt-get dist-upgrade
   ```
    
