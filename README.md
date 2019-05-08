@@ -35,7 +35,7 @@ Install TkInter and Python image library\
 **Display brightness**\
 `sudo bash -c "echo n > /sys/class/backlight/rpi_backlight/brightness"`\
 where 0 < n < 255 (255 is maximum brightness)\
-*Alternate Method*
+[*Alternate Method*](https://raspberrypi.stackexchange.com/questions/46225/adjusting-the-brightness-of-the-official-touchscreen-display)
 ```
 >>> import rpi_backlight as bl
 >>> bl.set_brightness(255)
