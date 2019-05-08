@@ -14,9 +14,9 @@ The automated load bank is managed primarily by a Raspberry Pi computer, and its
     [TUTORIAL](https://www.raspberrypi.org/documentation/installation/installing-images/)
     
   Set date for Wi-Fi access
-    '''
+    ```
     sudo date -s "Dec 27 14:54"
-    '''
+    ```
     
   Update software repositories & installed software\
     [TUTORIAL](https://www.raspberrypi.org/documentation/raspbian/updating.md)\
