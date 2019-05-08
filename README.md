@@ -29,5 +29,5 @@ Install TkInter
   
 ### Handy Features/Resources
 Display brightness\
-`sudo bash -c "echo n > /sys/class/backlight/rpi_backlight/brightness"`\
-where 0 < `n` < 255 (255 is maximum brightness)
+`sudo bash -c "echo n > /sys/class/backlight/rpi_backlight/brightness"`
+where 0 < n < 255 (255 is maximum brightness)
