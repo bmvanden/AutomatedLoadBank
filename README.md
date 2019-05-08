@@ -13,7 +13,7 @@ The automated load bank is managed primarily by a Raspberry Pi computer, and its
   Install Raspbian operating system using Etcher to put the latest image on an SD card.\
     [TUTORIAL](https://www.raspberrypi.org/documentation/installation/installing-images/)
     
-  Set date for Wi-Fi access
+  Set date for Wi-Fi access\
     ```
     sudo date -s "Dec 27 14:54"
     ```
