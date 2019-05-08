@@ -18,14 +18,11 @@ Set date for Wi-Fi access
   `sudo date -s "Dec 27 14:54"`
     
 Update software repositories & installed software\
-  [TUTORIAL](https://www.raspberrypi.org/documentation/raspbian/updating.md)
-    
-  `sudo apt-get update`
-  
+  [TUTORIAL](https://www.raspberrypi.org/documentation/raspbian/updating.md)\
+  `sudo apt-get update`\
   `sudo apt-get dist-upgrade`
    
 Install "Matchbox" on-screen software keyboard\
-  
   `sudo apt-get install matchbox-keyboard`
     
 Install TkInter
