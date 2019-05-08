@@ -25,9 +25,26 @@ Update software repositories & installed software\
 Install "Matchbox" on-screen software keyboard\
   `sudo apt-get install matchbox-keyboard`
     
-Install TkInter
+Install TkInter and Python image library\
+`sudo apt-get install tk'\
+`sudo apt-get install python-imaging`\
+`sudo apt-get install python-imaging-tk`\
+`sudo apt-get install python3-pil.imagetk`
   
 ### Handy Features/Resources
 **Display brightness**\
 `sudo bash -c "echo n > /sys/class/backlight/rpi_backlight/brightness"`\
-where 0 < n < 255 (255 is maximum brightness)
+where 0 < n < 255 (255 is maximum brightness)\
+*Alternate Method*\
+```
+>>> import rpi_backlight as bl
+>>> bl.set_brightness(255)
+>>> bl.set_brightness(20, smooth=True, duration=3)
+>>> bl.get_max_brightness()
+255
+>>> bl.get_actual_brightness()
+20
+>>> bl.get_power()
+True
+>>> bl.set_power(False)
+```
