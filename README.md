@@ -30,7 +30,26 @@ Install TkInter and Python image library\
 `sudo apt-get install python-imaging`\
 `sudo apt-get install python-imaging-tk`\
 `sudo apt-get install python3-pil.imagetk`
-  
+
+Set Python3 as default environment\
+Edit bash file: `nano ~/.bashrc`\
+Add at the end:
+```
+alias python='/usr/bin/python3'
+alias pip=pip3
+```
+Run bash file: `source ~/.bashrc`\
+
+Enable I2C\
+`sudo raspi-config` -> **5 Interfacing Options** -> **P5 I2C** -> **yes** -> **Finish**
+
+Add Matplotlib dependencies
+```
+sudo apt-get install libatlas3-base libffi-dev at-spi2-core python3-gi-cairo
+pip install cairocffi
+pip install matplotlib
+```
+
 ### Handy Features/Resources
 **Display brightness**\
 `sudo bash -c "echo n > /sys/class/backlight/rpi_backlight/brightness"`\
