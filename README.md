@@ -1,4 +1,4 @@
-# Automated Load Bank
+# AutomatedLoadBank
 Python user interface for Raspberry Pi driven automated load bank
 
 ### Project Abstract
@@ -10,31 +10,29 @@ The automated load bank is managed primarily by a Raspberry Pi computer, and its
 ### Version History
 
 ### Pi Configurations Necessary to Run this Software
-  Install Raspbian operating system using Etcher to put the latest image on an SD card.\
+Install Raspbian operating system using Etcher to put the latest image on an SD card.\
     [TUTORIAL](https://www.raspberrypi.org/documentation/installation/installing-images/)
     
-  Set date for Wi-Fi access\
-    ```
-    sudo date -s "Dec 27 14:54"
-    ```
+Set date for Wi-Fi access
+  
+  `sudo date -s "Dec 27 14:54"`
     
-  Update software repositories & installed software\
-    [TUTORIAL](https://www.raspberrypi.org/documentation/raspbian/updating.md)\
-    ```
-    sudo apt-get update
-    sudo apt-get dist-upgrade
-    ```
+Update software repositories & installed software\
+  [TUTORIAL](https://www.raspberrypi.org/documentation/raspbian/updating.md)
+    
+  `sudo apt-get update`
+  
+  `sudo apt-get dist-upgrade`
    
-  Install "Matchbox" on-screen software keyboard\
-    ```
-    sudo apt-get install matchbox-keyboard
-    ```
+Install "Matchbox" on-screen software keyboard\
+  
+  `sudo apt-get install matchbox-keyboard`
     
-  Install TkInter
+Install TkInter
   
 ### Handy Features/Resources
-  Display brightness\
-    ```
-    sudo bash -c "echo n > /sys/class/backlight/rpi_backlight/brightness"
-    ```
-    where 0 < n < 255 (255 is maximum brightness)
+Display brightness
+
+`sudo bash -c "echo n > /sys/class/backlight/rpi_backlight/brightness"`
+
+where 0 < n < 255 (255 is maximum brightness)
