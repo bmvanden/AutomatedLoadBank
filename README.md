@@ -10,28 +10,28 @@ The automated load bank is managed primarily by a Raspberry Pi computer, and its
 ### Version History
 
 ### Pi Configurations Necessary to Run this Software
-Install Raspbian operating system using Etcher to put the latest image on an SD card.\
+**Install Raspbian operating system using Etcher to put the latest image on an SD card**\
     [TUTORIAL](https://www.raspberrypi.org/documentation/installation/installing-images/)
     
-Set date for Wi-Fi access\
+**Set date for Wi-Fi access**\
   `sudo date -s "Dec 27 14:54"`
     
-Update software repositories & installed software\
+**Update software repositories & installed software**\
   [TUTORIAL](https://www.raspberrypi.org/documentation/raspbian/updating.md)\
   `sudo apt-get update`\
   `sudo apt-get dist-upgrade`
   
    
-Install "Matchbox" on-screen software keyboard\
+**Install "Matchbox" on-screen software keyboard**\
   `sudo apt-get install matchbox-keyboard`
     
-Install TkInter and Python image library\
+**Install TkInter and Python image library**\
 `sudo apt-get install tk'\
 `sudo apt-get install python-imaging`\
 `sudo apt-get install python-imaging-tk`\
 `sudo apt-get install python3-pil.imagetk`
 
-Set Python3 as default environment\
+**Set Python3 as default environment**\
 Edit bash file: `nano ~/.bashrc`\
 Add at the end:
 ```
@@ -40,10 +40,10 @@ alias pip=pip3
 ```
 Run bash file: `source ~/.bashrc`\
 
-Enable I2C\
+**Enable I2C**\
 `sudo raspi-config` -> **5 Interfacing Options** -> **P5 I2C** -> **yes** -> **Finish**
 
-Add Matplotlib dependencies
+**Add Matplotlib dependencies**
 ```
 sudo apt-get install libatlas3-base libffi-dev at-spi2-core python3-gi-cairo
 pip install cairocffi
