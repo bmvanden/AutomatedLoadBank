@@ -26,7 +26,7 @@ The automated load bank is managed primarily by a Raspberry Pi computer, and its
   `sudo apt-get install matchbox-keyboard`
     
 **Install TkInter and Python image library**\
-`sudo apt-get install tk'\
+`sudo apt-get install tk`\
 `sudo apt-get install python-imaging`\
 `sudo apt-get install python-imaging-tk`\
 `sudo apt-get install python3-pil.imagetk`
