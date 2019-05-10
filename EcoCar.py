@@ -45,9 +45,9 @@ from PIL import ImageTk, Image
 import configparser
 import math
 import RPi.GPIO as GPIO
-from smbus2 import SMBusWrapper
-import os
-import glob
+from smbus2 import SMBusWrapper #BV For I2C communication
+import os                       #BV Operating system interface
+import glob                     #BV Config file parser
 
 address = 0x08
 
@@ -84,6 +84,10 @@ parser.read('CarConfig.ini')
 #initialization for configuration file
 
 class EcoCar:
+    """Holds variables related to operating parameters of selected
+    vehicle
+    """
+
     name = None
     method = None
     CCurrent = None
@@ -99,6 +103,7 @@ class EcoCar:
 #Class for variables related to ecocar
 
 class OperatingSpecs:
+    """Holds variables for current values of load bank operation"""
     BatVolt = None
     CellVolt = None
     CellCurr = None
@@ -108,6 +113,7 @@ class OperatingSpecs:
     FanSpeedUpper = 10
 #Class for variables related to operation
     
+#BV Create an instance of each class
 InsOS = OperatingSpecs()
 
 YourEcoCar = EcoCar()
@@ -134,12 +140,12 @@ def read_temp(file_name):
     if equals_pos != -1:
         temp_string = lines[1][equals_pos+2:]
         temp_c = float(temp_string) / 1000.0
-        temp_f = temp_c * 9.0 / 5.0 + 32.0
+        temp_f = temp_c * 9.0 / 5.0 + 32.0      #BV Why do we need temperature in Fahrenheit?
         return temp_c
 #converts direct ouput to legible output in celcius
     
 def tempSensing():
-    #InsOS.TempLower = read_temp(device_file_low)
+    #InsOS.TempLower = read_temp(device_file_low)   #BV Uncomment these to enable temperature sensing
     #print(InsOS.TempLower)
     InsOS.TempUpper = read_temp(device_file_high)
     print(InsOS.TempUpper)
