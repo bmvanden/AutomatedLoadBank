@@ -7,6 +7,19 @@ An automated resistive load bank was created to test and optimize hydrogen fuel 
 ### Software Overview
 The automated load bank is managed primarily by a Raspberry Pi computer, and its I/O capabilities are extended using an Atmel ATMega328P. In this repository lies the software for the Raspberry Pi. The software is primarily written in Python and uses the TkInter graphics library to develop a touchscreen user interface.
 
+### Communication With Other Modules
+#### ATMega328P via I2C
+**Raspberry Pi to ATMega328P**
+* 0 -- Stop output
+* 1-120 -- Desired load in steps. Step size is 0.5 A, so a value of 64 would correspond to a 32 A load.
+* 121 -- Start an air starve cycle. Operating parameters are set in the ATMega328P.
+* 122 -- Data request for all inputs read by ATMega328P. (Fuel cell voltage, fuel cell current, battery voltage)
+* 123 -- Trigger to tell ATMega328P that fan speeds will be sent next.
+* **WARNING:** Sending values greater than 123 will be interpreted by the ATMega328P as desired current values of greater than 60 A which is outside the design parameters for the hardware.
+
+**ATMega328P to Raspberry Pi**
+
+
 ### Version History
 
 ### Pi Configurations Necessary to Run this Software

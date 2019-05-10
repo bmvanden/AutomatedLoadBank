@@ -46,7 +46,6 @@ import configparser
 import math
 import RPi.GPIO as GPIO
 from smbus2 import SMBusWrapper #BV For I2C communication
-import os                       #BV Operating system interface
 import glob                     #BV Config file parser
 
 address = 0x08
@@ -84,10 +83,7 @@ parser.read('CarConfig.ini')
 #initialization for configuration file
 
 class EcoCar:
-    """Holds variables related to operating parameters of selected
-    vehicle
-    """
-
+    """Holds operating parameters of selected vehicle"""
     name = None
     method = None
     CCurrent = None
@@ -125,6 +121,11 @@ YourEcoCar = EcoCar()
 
 
 def read_temp_raw(file_name):
+    """Gets raw data from temperature sensor
+
+    file_name -- address of temperature sensor
+    """
+
     f = open(file_name, 'r')
     lines = f.readlines()
     f.close()
@@ -132,6 +133,11 @@ def read_temp_raw(file_name):
 #gets direct output from terminal
  
 def read_temp(file_name):
+    """Converts raw data from temperature sensor to degrees celsius
+
+    file_name -- address of temperature sensor
+    """
+
     lines = read_temp_raw(file_name)
     while lines[0].strip()[-3:] != 'YES':
         time.sleep(0.1)
@@ -153,6 +159,18 @@ def tempSensing():
 #Calls temperature sensing
 
 def translate(value, leftMin, leftMax, rightMin, rightMax):
+    """Uses predefined limits for enclosure temperature to convert
+    temperature sensor readings to an appropriate fan speed. Fan speed
+    will typically be output to the ATMega via I2C using an integer
+    between 1 and 10.
+
+    value -- temperature sensor reading
+    leftMin -- lowest temperature at which fan will be activated
+    leftMax -- temperature for maximum fan speed
+    rightMin -- output value for minimum fan speed (typical: 1)
+    rightMax -- output value for maximum fan speed (typical: 10)
+    """
+
     # Figure out how 'wide' each range is
     leftSpan = leftMax - leftMin
     rightSpan = rightMax - rightMin
@@ -166,13 +184,24 @@ def translate(value, leftMin, leftMax, rightMin, rightMax):
 #Scales values from temperature to scaled values
 
 def fanTransmission():
+    """Sets desired fan speed in "InOS" (current operating values) as
+    an integer value from 0 to 10.
+    """
+
     if(InsOS.TempLower > 30 and InsOS.TempLower < 55):
+        #BV If temperature is within normal operating range, provide
+        # scaled output for fan speed
         InsOS.FanSpeedLower = int(math.floor(translate(InsOS.TempLower, 30, 55, 1, 10)))
     elif(InsOS.TempLower > 55 and InsOS.TempLower < 60):
+        #BV If temperature is high, but not critical, run fans at
+        # maximum speed
         InsOS.FanSpeedLower = 10
     elif(InsOs.TempLower < 30):
+        #BV If temperature is low, turn fans off
         InsOS.FanSpeedLower = 0
     else:
+        #BV Outside of acceptable range, shutdown with error code 3
+        # (Low temperature zone outside of safe limits)
         desync_shutdown(3)
 
     if(InsOS.TempUpper > 30 and InsOS.TempUpper < 75):
@@ -342,7 +371,6 @@ def ValueWrite(fanValueOne, fanValueTwo):
 def SafetyCheck():
     if(InsOS.BatVolt < 11):
         #battery voltage must stay above 11 for things to work.
-        #"if this one ever triggers we have bigger issues than low power" -Ben
         desync_shutdown(5)
     #if((InsOS.CellVolt < 10) or (InsOS.CellVolt > 46)):
         #(Commented out) I realised this may trigger in the event of air starve, if you add an exception for that, this works
@@ -394,7 +422,7 @@ def desync_shutdown(trigger):
     elif trigger == 5:
         errormessage = "The battery voltage has fallen too far and the device must be stopped."
     elif trigger == 6:
-        errormessage = "The Cell voltage has gone too high or too low and the device must be stopped."
+        errormessage = "The cell voltage has gone too high or too low and the device must be stopped."
     elif trigger == 7:
         errormessage = "The cell current has gone too high or too low and the device must be stopped."
     else:
