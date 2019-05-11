@@ -276,7 +276,9 @@ def air_starve():
     
 def conditioning_cycle():
     ConditioningTime = 20;
-    #20 Minutes for conditioning cycle, this is what we agreed on but is not some sort of mandatory value, could be made into a config file value
+    # 20 Minutes for conditioning cycle, this is what we agreed on but
+    # is not some sort of mandatory value, could be made into a config
+    # file value
     
     GPIO.output(9, 1)
     ValueComm(YourEcoCar.CCurrentStep)
@@ -292,7 +294,8 @@ def ValueReceive():
         try:
             with SMBusWrapper(1) as bus:
                 data = bus.read_i2c_block_data(address, 122, 7)
-                #prepared to receive 7 values, the first will always be 122 and is omitted
+                # prepared to receive 7 values, the first will always be
+                # 122 and is omitted
                 for received in data:
                     if received > 1024:
                         failcounter += 1
@@ -302,8 +305,9 @@ def ValueReceive():
                 if skipdatacounter == 0:
                     garbagevalues = 0
                     InsOS.BatVolt = ((data[1]<<8) + (data[2]))*(0.0146)
-                    #Receives 10 bit value in 2 sets, pieces them together here, multiplies by step size.
-                    InsOS.CellVolt = (data[3]<<8) + (data[4])*(0.0478)
+                    # Receives 10 bit value in 2 sets, pieces them 
+                    # together here, multiplies by step size.
+                    InsOS.CellVolt = ((data[3]<<8) + (data[4]))*(0.0478)
                     InsOS.CellCurr = ((511-((data[5]<<8) + (data[6])))*0.168)
                     break
                 skipdatacounter = 0
@@ -317,27 +321,35 @@ def ValueReceive():
             pass
         
 def ValueComm(important_value):
-#OK SO HERES THE DEAL WITH HOW THIS CODE WORKS
-#address is constant, its what we need to talk between the two devices
-#I'm using read here instead of write because they actually do effectively the same thing in this case because theres 0 data to transmit
-#This library is stupid.
-#effectively, important_value which is called an offset value, is sent to the ATMega
-#Jaya has set it up to read those offsets as commands
-#Because this library is silly and its actually the most memory efficient way.
-#Heres a good project for anyone looking to make this code better:
-#Rewrite the I2C protocols, I really didnt want to, I wouldn't recommend you do either because if it ain't broke dont fix it
-#I'm sorry. -Nik
+# OK SO HERES THE DEAL WITH HOW THIS CODE WORKS
+# address is constant, its what we need to talk between the two devices
+# I'm using read here instead of write because they actually do
+# effectively the same thing in this case because theres 0 data to
+# transmit
+# This library is stupid.
+# effectively, important_value which is called an offset value, is sent
+# to the ATMega
+# Jaya has set it up to read those offsets as commands
+# Because this library is silly and its actually the most memory 
+# efficient way.
+# Heres a good project for anyone looking to make this code better:
+# Rewrite the I2C protocols, I really didnt want to, I wouldn't
+# recommend you do either because if it ain't broke dont fix it
+# I'm sorry. -Nik
     
     failcounter = 0
-    #if the code fails to send 3 times in a row, the entire program grinds to a halt, yep.
-    #if i lose control of the code through this, you need to cycle power because everything is fudged.
+    # if the code fails to send 3 times in a row, the entire program
+    # grinds to a halt, yep.
+    # if i lose control of the code through this, you need to cycle
+    # power because everything is fudged.
 
     if(important_value == 0):
         while 1:
             with SMBusWrapper(1) as bus:
                 bus.read_i2c_block_data(address, important_value, 0)
                 time.sleep(0.01)
-                #This case is only for sending 0, as its not going to try/except, its just gonna keep doing it until it works.
+                # This case is only for sending 0, as its not going to
+                # try/except, its just gonna keep doing it until it works.
                 
     while 1:
         try:
