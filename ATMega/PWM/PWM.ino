@@ -1,3 +1,5 @@
+#include <watchdogHandler.h>
+
 /*
  * Filename: PWM.ino
  * Title:    EcoCar - Automated Resistive Load Bank
@@ -10,8 +12,8 @@
 #include <avr/power.h>
 #include <avr/wdt.h>
 #include <avr/sleep.h>
-#include <PID_AutoTune_v0.h>
-#include <PID_v1.h>
+//#include <PID_AutoTune_v0.h>
+//#include <PID_v1.h>
 #include <Wire.h>
 
 #define SLAVE_ADDRESS 0x08

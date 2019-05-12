@@ -161,7 +161,7 @@ def tempSensing():
 def translate(value, leftMin, leftMax, rightMin, rightMax):
     """Uses predefined limits for enclosure temperature to convert
     temperature sensor readings to an appropriate fan speed. Fan speed
-    will typically be output to the ATMega via I2C using an integer
+    will typically be output to the ATMega via I2C using an integerf
     between 1 and 10.
 
     value -- temperature sensor reading
@@ -400,7 +400,7 @@ def timeWait(timelimit):
         while(time.time() < timeout):
             pass
 
-        tempSensing()
+        #tempSensing()
         #fanTransmission()
         ValueWrite(InsOS.FanSpeedLower, InsOS.FanSpeedUpper)
         #do the temp sensing first each cycle
