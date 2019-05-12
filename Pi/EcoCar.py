@@ -65,11 +65,11 @@ GPIO.output(9, 0)
 #os.system('sudo dtoverlay w1-gpio gpiopin=6')
 #(Commented out for testing, we did this manually in the terminal) initialization for temp sensors
 
-base_dir = '/sys/bus/w1/devices/'
-device_folder_high = base_dir + '28-00000af6a9ee'
-device_folder_low = base_dir + '28-00000af6bc8e'
-device_file_high = device_folder_high + '/w1_slave'
-device_file_low = device_folder_low + '/w1_slave'
+#base_dir = '/sys/bus/w1/devices/'
+#device_folder_high = base_dir + '28-00000af6a9ee'
+#device_folder_low = base_dir + '28-00000af6bc8e'
+#device_file_high = device_folder_high + '/w1_slave'
+#device_file_low = device_folder_low + '/w1_slave'
 #finds paths for the temperature sensors
 
 ##How to get data from a config file:
