@@ -63,6 +63,9 @@ pip install cairocffi
 pip install matplotlib
 ```
 
+**Add I2C library**\
+`pip3 install smbus2`
+
 ### Handy Features/Resources
 **Display brightness**\
 `sudo bash -c "echo n > /sys/class/backlight/rpi_backlight/brightness"`\
