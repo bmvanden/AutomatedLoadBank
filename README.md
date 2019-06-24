@@ -51,7 +51,7 @@ Add at the end:
 alias python='/usr/bin/python3'
 alias pip=pip3
 ```
-Run bash file: `source ~/.bashrc`\
+Run bash file: `source ~/.bashrc`
 
 **Enable I2C**\
 `sudo raspi-config` -> **5 Interfacing Options** -> **P5 I2C** -> **yes** -> **Finish**
