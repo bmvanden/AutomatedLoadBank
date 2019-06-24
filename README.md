@@ -56,6 +56,11 @@ Run bash file: `source ~/.bashrc`\
 **Enable I2C**\
 `sudo raspi-config` -> **5 Interfacing Options** -> **P5 I2C** -> **yes** -> **Finish**
 
+**Set I2C Speed**\
+[REFERENCE](https://www.raspberrypi-spy.co.uk/2018/02/change-raspberry-pi-i2c-bus-speed/)\
+'sudo nano /boot/config.txt'\
+'dtparam=i2c_arm=on,i2c_arm_baudrate=15000' (for 15kHz baud rate)
+
 **Add Matplotlib dependencies**
 ```
 sudo apt-get install libatlas3-base libffi-dev at-spi2-core python3-gi-cairo
