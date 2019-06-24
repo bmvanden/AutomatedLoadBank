@@ -58,8 +58,8 @@ Run bash file: `source ~/.bashrc`\
 
 **Set I2C Speed**\
 [REFERENCE](https://www.raspberrypi-spy.co.uk/2018/02/change-raspberry-pi-i2c-bus-speed/)\
-'sudo nano /boot/config.txt'\
-'dtparam=i2c_arm=on,i2c_arm_baudrate=15000' (for 15kHz baud rate)
+`sudo nano /boot/config.txt`\
+`dtparam=i2c_arm=on,i2c_arm_baudrate=15000` (for 15kHz baud rate)
 
 **Add Matplotlib dependencies**
 ```
