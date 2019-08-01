@@ -3,8 +3,10 @@
                                                                                EcoCar FC Team 
                                                                                Elizabeth Gierl
                                                                                Summer 2019                                                                          */
-
-
+//pin mapping:
+// Pol Curve + Conditioning: Pin 16 (PB2: SS/OC1B/PCINT2)
+//Air Starve Relay: PD7 (PCINT23/AIN1)
+// PWM for fans PD6 (PCINT22/OC0A/AIN0)
 
 #include <Wire.h>
 #define SLAVE_ADDRESS 0x08
@@ -24,42 +26,70 @@ void setup() {
   char FC_Volt_high=16; //1 byte 2 bits
   char Battery_Volt_low=30; //1 bytes 8 bits
   char Battery_Volt_high=30; //1 bytes two bits
-  char Fan_Speed=2;//1 byte
   char CurrentCurrent=40;//1 bytes
   char DesiredCurrent=3; //1 byte
   char c[]={223,8,221,40};
   char Read_Inputs[]={0,0,0,223,8,221,40};
   char output_pi[]={0,1, 1, 1}; 
+  char Temperature= 10; 
+  char Fan_Speed=OCR0A;
+  char AirStarve_Set=0;
+  char Conditioning_Set=0;
+  char Conditioning_Value=0;
+  char Resistance=OCR1B;
+
 
 
 //MAIN LOOP
 void loop() {
- 
+
+  //variables 
+  char low=10;
+  char low_medium=20;
+  char medium=30;
+  char medium_high=40;
+  char high=60;
+
 //Call functions:  
-  
 
-
-// Respond to states:
-  //Make a plan for response to changes of states:
-
-//Read fan speed and adjust fan PWM value accordingly (5 speeds?) low , low medium, medium, medium high, high temp?
+// Add conditions in which Airstarve vs different types of pol curve + conditioning is called
 //Conditioning : Recieve a max current from the pi code? Then 1A stepsize? to the max every one min
 //Air starve: Trigger other output ?
 //Battery Voltage? Anything but reading it?
 // Saftey Check from Jayas Code?
 
-
-//pin mapping:
-//
-
   
-  //Monday:Solder other board + figure out to call functions
-  //Tuesday: Put Code on git 
+  
+  //Fans:
+  if (Temperature > low) {
+    Fan_Speed=0;
+   }
+  else if (low < Temperature > low_medium) {
+    Fan_Speed=5;
+   }
+  else if (low_medium < Temperature > medium) {
+    Fan_Speed==20;
+   }
+  else if (medium < Temperature > medium_high) {
+    Fan_Speed==40;
+   }
+  else if (medium_high < Temperature > high) {
+    Fan_Speed==60;
+   }
+  else if (high < Temperature) {
+    Fan_Speed== 100;
+   }
+
 
 }
 
 
+
+
+
+
 //FUNCTIONS
+
 void Read_From_Atmega() {
   
   char  Atmega_Status=2;//how should we collect this?
@@ -71,6 +101,7 @@ void Read_From_Atmega() {
   Battery_Volt_high=highByte(Battery_Volt);
   char CurrentCurrent=analogRead(A0);
   char Read_Inputs[]= {0,Atmega_Status,FC_Volt_low,FC_Volt_high,Battery_Volt_low,Battery_Volt_high,CurrentCurrent}; 
+
 }
 
 void Read_From_Pi(int howMany) {
@@ -95,4 +126,47 @@ void Write_to_Pi() {
   char data[] ={0,Atmega_Status,FC_Volt_low,FC_Volt_high,Battery_Volt_low,Battery_Volt_high,CurrentCurrent}; 
   Wire.write(data); 
   Serial.println(data); 
+}
+
+
+void AirStarve(){
+
+  if(AirStarve_Set==1){
+    digitalWrite(13, HIGH);
+  }
+  
+  else{
+    digitalWrite(13, LOW);
+  }
+
+}
+
+
+void Conditioning(){
+  if (Conditioning_Set==1){
+     Resistance==Conditioning_Value;
+  }
+  else{
+     Resistance==0;
+  }
+  
+}
+
+void PolCurve(){
+
+if (CurrentCurrent < DesiredCurrent){
+  Resistance = Resistance--;
+  
+}
+
+else if (CurrentCurrent > DesiredCurrent){
+  Resistance = Resistance++;
+}
+
+
+else if (CurrentCurrent == DesiredCurrent){
+  Resistance = Resistance;
+}
+
+
 }
