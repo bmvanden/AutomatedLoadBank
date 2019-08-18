@@ -19,10 +19,10 @@
 //setup global varaibles 
   char  Atmega_Status=2; //1 byte
   char Pi_Status= 23; // 1 byte 
-  char FC_Volt_low=46; //1 bytes 8 bits
-  char FC_Volt_high=16; //1 byte 2 bits
-  char Battery_Volt_low=30; //1 bytes 8 bits
-  char Battery_Volt_high=30; //1 bytes two bits
+  char CellVoltageLow=46; //1 bytes 8 bits
+  char CellVoltageHigh=16; //1 byte 2 bits
+  char BatteryVoltageLow=30; //1 bytes 8 bits
+  char BatteryVoltageHigh=30; //1 bytes two bits
   char CurrentCurrent=40;//1 bytes
   char DesiredCurrent=3; //1 byte
   char c[]={223,8,221,40};
@@ -34,6 +34,9 @@
   char Conditioning_Set=0;
   char Conditioning_Value=0;
   char Resistance=OCR1B;
+  char CellCurrentLow;
+  char CellCurrentHigh;
+  
 
   
   
@@ -84,6 +87,15 @@ Read_From_Atmega();
  
   
   //Fans:
+double Setpoint1= 100; 
+Input1= Desired_Fan_Speed;
+Output1= Fan_Speed;
+
+
+// Load Control 
+double Setpoint= 100; 
+Input= DesiredCurrent;
+Output= CurrentCurrent;
 
 
 }
@@ -99,13 +111,16 @@ char Read_From_Atmega() {
   int FC_Volt=analogRead(A1);
   int Battery_Volt=analogRead(A2);
   
-  FC_Volt_low=lowByte(FC_Volt);
-  FC_Volt_high=highByte(FC_Volt);
-  Battery_Volt_low=lowByte(Battery_Volt);
-  Battery_Volt_high=highByte(Battery_Volt);
+  CellVoltageLow=lowByte(FC_Volt);
+  CellVoltageHigh=highByte(FC_Volt);
+  BatteryVoltageLow=lowByte(Battery_Volt);
+  BatteryVoltageHigh=highByte(Battery_Volt);
+  CellCurrentLow= lowByte(CurrentCurrent);
+  CellCurrentHigh= highByte(CurrentCurrent);
+  //add thisread!  Fan_Speed=; 
   
   char CurrentCurrent=analogRead(A0);
-  char ReadInputs[]= {0,Atmega_Status,FC_Volt_low,FC_Volt_high,Battery_Volt_low,Battery_Volt_high,CurrentCurrent}; 
+  char Read_Inputs[]= {0,Atmega_Status,CellCurrentHigh, CellCurrentLow, CellVoltageHigh,CellVoltageLow,BatteryVoltageHigh,BatteryVoltageLow};
   return Read_Inputs;
 }
 
@@ -123,14 +138,19 @@ char Read_From_Pi(int howMany) {
   Fan_Speed=c[2];
   DesiredCurrent=c[3];
   
-  char output_pi[]={0,Pi_Status, Fan_Speed, DesiredCurrent}; 
+  char output_pi[]={0,Pi_Status, Desired_Fan_Speed, DesiredCurrent}; 
   
 }
+
+
+
+
   
 void Write_to_Pi() {  
-  char data[] ={0,Atmega_Status,FC_Volt_low,FC_Volt_high,Battery_Volt_low,Battery_Volt_high,CurrentCurrent}; 
-  Wire.write(data); 
+  Wire.write(Read_Inputs); 
 }
+
+
 
 
 void AirStarve(){
@@ -143,8 +163,4 @@ void AirStarve(){
     digitalWrite(13, LOW);
   }
 
-}
-
-
-void LoadControl(){
 }
