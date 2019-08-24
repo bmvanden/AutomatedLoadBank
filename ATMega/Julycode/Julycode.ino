@@ -5,10 +5,12 @@
                                                                                Summer 2019                                                                          */
 
 //Things left to do:
-// Saftey thing
-//Signal bit 
-//make sure Air starve thing is correct..
+// Saftey thing 
 // double check with Jaya code 
+//Read more from PID library to make sure it is actually doing that I think I am doing
+//add max fan speed
+//add watch dog
+//current sensor readings 
 
 #include <Wire.h>
 #define SLAVE_ADDRESS 0x08
@@ -37,7 +39,7 @@ void setup() {
 
 char c[]={223,8,221};
 //Code for testing:
-  char  Atmega_Status=2; //1 byte
+  char  Atmega_Status=20; //1 byte
   char Pi_Status= 23; // 1 byte
   int FC_Volt=46; //2 bytes
   int Battery_Volt=30; //2 bytes
@@ -54,11 +56,85 @@ char c[]={223,8,221};
   char AirStarve_Set=0;
 
 
-
-
 //MAIN LOOP
+
 void loop() { 
+ //Call functions
+ attachInterrupt(digitalPinToInterrupt(2), saftey_pin, FALLING);
  Read_From_Atmega(); 
+ AirStarve();
+
+//if over current
+ if (CurrentCurrent > 60){
+      DesiredCurrent=0;
+      AirStarve_Set=0;
+      Desired_Fan_Speed=100;
+      Atmega_Status=6;
+      //what number is max desired fan speed 
+ }
+
+switch (Pi_Status) {
+    case 0:
+      Serial.println("Booting Up"); 
+      Atmega_Status=0;
+      break;
+    case 1:
+      Serial.println("Establishing I2C"); 
+      break;
+    case 2:
+      Serial.println("Communication Established"); 
+      Atmega_Status=2; 
+      break;
+    case 3:
+      Serial.println("Normal Operation"); 
+      break;
+    case 4:
+      Serial.println("Over Temperature in load region"); 
+      DesiredCurrent=0;
+      AirStarve_Set=0;
+      Desired_Fan_Speed=100;
+      //what number is max desired fan speed
+      break;
+    case 5:
+      Serial.println("Over Temperature in control region"); 
+      DesiredCurrent=0;
+      AirStarve_Set=0;
+      Desired_Fan_Speed=100;
+      //what number is max desired fan speed
+      break;
+    case 6:
+      Serial.println("Over Current"); 
+      DesiredCurrent=0;
+      AirStarve_Set=0;
+      Desired_Fan_Speed=100;
+      //what number is max desired fan speed
+      break;
+    case 7:
+      Serial.println("Cell voltage is too high"); 
+      DesiredCurrent=0;
+      AirStarve_Set=0;
+      Desired_Fan_Speed=100;
+      break;
+    case 8:
+      Serial.println("Cell voltage is too low"); 
+      DesiredCurrent=0;
+      AirStarve_Set=0;
+      Desired_Fan_Speed=100;
+      break;
+    case 9:
+      Serial.println("Battery Voltage is too Low"); 
+      DesiredCurrent=0;
+      AirStarve_Set=0;
+      Desired_Fan_Speed=100;
+      break;
+    case 10:
+      AirStarve_Set=1;
+      break;
+    default: 
+      Serial.println("Lost Communication"); 
+    break;
+  }
+  
    
   //Fans:
 double Setpoint1= 100; 
@@ -74,9 +150,25 @@ Output= CurrentCurrent;
 }
 
 
+
+
+
+
+
+
+
+
 //FUNCTIONS
+
+void saftey_pin()  //interupt saftey pin        
+{                   
+   DesiredCurrent=0;
+   AirStarve_Set=0;
+   Desired_Fan_Speed=100;                              
+   Serial.println("Saftey Button Interrupt");
+}
+
 void  Read_From_Atmega() {
-  
   char  Atmega_Status=2;//how should we collect this?
   int FC_Volt=analogRead(A1);
   int Battery_Volt=analogRead(A2);
@@ -89,11 +181,9 @@ void  Read_From_Atmega() {
   char BatteryVoltageHigh=highByte(Battery_Volt);
   char CellCurrentLow= lowByte(CurrentCurrent);
   char CellCurrentHigh= highByte(CurrentCurrent);
-  
 }
 
 void Read_From_Pi(int howMany) {
-
   int i=0;
 while ( Wire.available()) { // loop through all but the last
     c[i] = Wire.read(); // receive byte as a character
@@ -103,7 +193,6 @@ while ( Wire.available()) { // loop through all but the last
   Pi_Status=c[1];
   Desired_Fan_Speed=c[2];
   DesiredCurrent=c[3];
-  
 }
   
 void Write_to_Pi() {  
@@ -117,13 +206,10 @@ void Write_to_Pi() {
 
 
 void AirStarve(){
-
   if(AirStarve_Set==1){
     digitalWrite(13, HIGH);
   }
-  
   else{
     digitalWrite(13, LOW);
   }
-
 }
