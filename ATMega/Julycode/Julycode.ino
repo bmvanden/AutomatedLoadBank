@@ -5,12 +5,10 @@
                                                                                Summer 2019                                                                          */
 
 //Things left to do:
-// Saftey thing 
-// double check with Jaya code 
-//Read more from PID library to make sure it is actually doing that I think I am doing
-//add max fan speed
 //add watch dog
 //current sensor readings 
+// double check with Jaya code 
+//done!
 
 #include <Wire.h>
 #define SLAVE_ADDRESS 0x08
@@ -61,6 +59,8 @@ char c[]={223,8,221};
 void loop() { 
  //Call functions
  attachInterrupt(digitalPinToInterrupt(2), saftey_pin, FALLING);
+ PWM25kHzBegin();
+ initAnalog();
  Read_From_Atmega(); 
  AirStarve();
 
@@ -68,7 +68,7 @@ void loop() {
  if (CurrentCurrent > 60){
       DesiredCurrent=0;
       AirStarve_Set=0;
-      Desired_Fan_Speed=100;
+      Desired_Fan_Speed=250;
       Atmega_Status=6;
       //what number is max desired fan speed 
  }
@@ -92,40 +92,40 @@ switch (Pi_Status) {
       Serial.println("Over Temperature in load region"); 
       DesiredCurrent=0;
       AirStarve_Set=0;
-      Desired_Fan_Speed=100;
+      Desired_Fan_Speed=250;
       //what number is max desired fan speed
       break;
     case 5:
       Serial.println("Over Temperature in control region"); 
       DesiredCurrent=0;
       AirStarve_Set=0;
-      Desired_Fan_Speed=100;
+      Desired_Fan_Speed=250;
       //what number is max desired fan speed
       break;
     case 6:
       Serial.println("Over Current"); 
       DesiredCurrent=0;
       AirStarve_Set=0;
-      Desired_Fan_Speed=100;
+      Desired_Fan_Speed=250;
       //what number is max desired fan speed
       break;
     case 7:
       Serial.println("Cell voltage is too high"); 
       DesiredCurrent=0;
       AirStarve_Set=0;
-      Desired_Fan_Speed=100;
+      Desired_Fan_Speed=250;
       break;
     case 8:
       Serial.println("Cell voltage is too low"); 
       DesiredCurrent=0;
       AirStarve_Set=0;
-      Desired_Fan_Speed=100;
+      Desired_Fan_Speed=250;
       break;
     case 9:
       Serial.println("Battery Voltage is too Low"); 
       DesiredCurrent=0;
       AirStarve_Set=0;
-      Desired_Fan_Speed=100;
+      Desired_Fan_Speed=250;
       break;
     case 10:
       AirStarve_Set=1;
@@ -135,22 +135,45 @@ switch (Pi_Status) {
     break;
   }
   
-   
-  //Fans:
-double Setpoint1= 100; 
-Input1= Desired_Fan_Speed;
-Output1= Fan_Speed;
+ 
+//Fans:
+Setpoint1= Desired_Fan_Speed;
+Input1= Fan_Speed;
+fansPID.Compute();
+analogWrite(12,Output);
+//The PID controller is designed to vary its output within a given range. By default this range is 0-255:
 
-
-// Load Control 
-double Setpoint= 100; 
-Input= DesiredCurrent;
-Output= CurrentCurrent;
+// Load Control
+loadPID.SetOutputLimits(0, 640);
+Setpoint= DesiredCurrent; 
+Input= CurrentCurrent;
+loadPID.Compute();
+OCR1B=Output; 
 
 }
 
 
 
+void PWM25kHzBegin() {
+  //Conditioning:
+  TCCR1A = 0;
+  TCCR1B = 0;
+  OCR1A = 640; 
+  OCR1B = 0;
+  DDRB |= (1<<PINB2);
+  TCCR1A |= (1<<COM1A1)|(1<<COM1B1)|(1<<WGM11)|(1<<WGM10);    //Non-inverting Mode - Clear OC1A/OC1B on Compare Match, Set at BOTTOM
+  TCCR1B |= (1<<CS10)|(1<<WGM13)|(1<<WGM12); //prescalar 1    // 25kHz
+
+}
+
+void initAnalog(){
+  ADMUX = (ADMUX | (1<<REFS0)) & ~(1<<REFS1);                 // Set analog reference to external A_ref
+  ADCSRA |= (1<<ADEN) | (1<<ADPS2) | (1<<ADPS1) | (1<<ADPS0); // Enable analog to digital conversion. Set div/8 pre-scaler for ADC clock.
+  DIDR0 |= (1<<ADC3D);                                        // Disable digital output on ADC3
+  PRR &= ~(1<<PRADC);                                         // Turn off power reduction
+  ADMUX &= 0xF0;                                              // Set ADC input to given parameter by clearing input selection bits, then setting to ADC3
+  ADMUX |= 3;
+}
 
 
 
@@ -164,7 +187,7 @@ void saftey_pin()  //interupt saftey pin
 {                   
    DesiredCurrent=0;
    AirStarve_Set=0;
-   Desired_Fan_Speed=100;                              
+   Desired_Fan_Speed=250;                              
    Serial.println("Saftey Button Interrupt");
 }
 
