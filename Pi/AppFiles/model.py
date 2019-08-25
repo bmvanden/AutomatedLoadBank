@@ -13,26 +13,35 @@ class EcoCarModel:
         airStarveTime = cfg.airStarveTime
         
         # Current operating parameters for load bank
-        PiStatus = 0            // See I2CThread.py for explanation of states
-        desiredEnclTemp = 35    // degrees C - fan speed adjusts to target this setpoint
-        actualLoadTemp = 0      // measured above load resistors
-        actualContrTemp = 0     // measured above controller board
-        targetLoadCurrent = 0   // amps - desired load on fuel cell
+        PiStatus = 0            # See I2CThread.py for explanation of states
+        desiredEnclTemp = 35    # degrees C - fan speed adjusts to target this setpoint
+        actualLoadTemp = 0      # measured above load resistors
+        actualContrTemp = 0     # measured above controller board
+        targetLoadCurrent = 0   # amps - desired load on fuel cell
         
         ATMegaStatus = 0
-        actualLoadCurrent = 0   // amps - actual load on fuel cell
-        actualLoadVoltage = 0   // volts - fuel cell voltage
-        batteryVoltage = 0      // volts - 12V internal battery voltage
+        actualLoadCurrent = 0   # amps - actual load on fuel cell
+        actualLoadVoltage = 0   # volts - fuel cell voltage
+        batteryVoltage = 0      # volts - 12V internal battery voltage
         
-    def refreshData(target):
+    def refreshI2CData(target):
         if target.dataOk:
-            # Update data to send to ATMega over I2C. I2C interface only supports integers
-            # from 0-255, so real values are doubled and converted to int to reduce step size.
+            # Update data to send to ATMega over I2C. I2C interface only
+            # supports integers from 0-255, so real values are doubled and 
+            # converted to int to reduce step size.
             target.PiData = [PiStatus, int(desiredEnclTemp * 2), int(actualLoadTemp * 2),
                              int(actualContrTemp * 2), int(targetLoadCurrent * 2)]
             
-            # Update data received from ATMega over I2C.
-            ATMegaStatus = ATMegaData[0]
-            actualLoadCurrent
-            actualLoadVoltage
-            batteryVoltage
+            # Update data received from ATMega over I2C. 
+            ATMegaStatus = target.ATMegaData[0]
+            actualLoadCurrent = ((511-((target.ATMegaData[1]<<8) 
+            	+ (target.ATMegaData[2])))*0.168)
+            actualLoadVoltage = ((target.ATMegaData[3]<<8) 
+            	+ (target.ATMegaData[4]))*(0.0478)
+            batteryVoltage = ((target.ATMegaData[5]<<8) 
+            	+ (target.ATMegaData[6]))*(0.0146)
+
+            print("From refreshI2CData")
+            print(actualLoadCurrent)
+            print(actualLoadVoltage)
+            print(batteryVoltage)

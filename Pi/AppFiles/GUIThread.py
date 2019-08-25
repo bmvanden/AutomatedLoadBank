@@ -43,6 +43,8 @@ class GUIThread (threading.Thread):
             PiData2.set(I2CThread.PiData[2])
             time.sleep(0.1)
             
+            # Temp line for debugging
+            model.refreshI2CData(I2CThread)
         
 
 
