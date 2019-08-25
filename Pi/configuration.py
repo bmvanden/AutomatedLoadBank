@@ -3,7 +3,7 @@ name = "Sofie"
 
 # Current to draw during conditioning cycle and duration to condition for
 conditioningCurrent   = 15    # Amps
-conditiontingTime     = 20    # Minutes
+conditioningTime      = 20    # Minutes
 
 # Minimum and maximum currents to draw during polarization curve
 minCurrent            = 0     # Amps
