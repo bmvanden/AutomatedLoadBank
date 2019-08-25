@@ -25,4 +25,14 @@ class EcoCarModel:
         batteryVoltage = 0      // volts - 12V internal battery voltage
         
     def refreshData(target):
-    
+        if target.dataOk:
+            # Update data to send to ATMega over I2C. I2C interface only supports integers
+            # from 0-255, so real values are doubled and converted to int to reduce step size.
+            target.PiData = [PiStatus, int(desiredEnclTemp * 2), int(actualLoadTemp * 2),
+                             int(actualContrTemp * 2), int(targetLoadCurrent * 2)]
+            
+            # Update data received from ATMega over I2C.
+            ATMegaStatus = ATMegaData[0]
+            actualLoadCurrent
+            actualLoadVoltage
+            batteryVoltage
