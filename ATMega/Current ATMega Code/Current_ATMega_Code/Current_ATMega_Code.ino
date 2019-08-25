@@ -2,10 +2,7 @@
  /*                                                                            Load Bank Atmel Code
                                                                                EcoCar FC Team 
                                                                                Elizabeth Gierl
-                                                                               Summer 2019                                                                          */
-//Things left to do:
-//double check with Jaya code 
-//fix fans..
+                                                                               Spring Summer 2019                                                                          */
 
 #include <Wire.h>
 #define SLAVE_ADDRESS 0x08
@@ -38,6 +35,7 @@ PID fansPID(&Input1, &Output1, &Setpoint1, 2, 5, 1, DIRECT);
   char CellCurrentLow=5;
   char CellCurrentHigh=5;
   char AirStarve_Set=0;
+  char Current_Temperature=80;
 
 
 void setup() { 
@@ -71,7 +69,7 @@ void loop() {
  if (CurrentCurrent > 60){
       DesiredCurrent=0;
       AirStarve_Set=0;
-      Desired_Fan_Speed=250;
+      Desired_Temperature=40;
       Atmega_Status=6;
       //what number is max desired fan speed 
  }
@@ -95,37 +93,37 @@ switch (Pi_Status) {
       Serial.println("Over Temperature in load region"); 
       DesiredCurrent=0;
       AirStarve_Set=0;
-      Desired_Fan_Speed=250;
+      Desired_Temperature=40;
       break;
     case 5:
       Serial.println("Over Temperature in control region"); 
       DesiredCurrent=0;
       AirStarve_Set=0;
-      Desired_Fan_Speed=250;
+      Desired_Temperature=40;
       break;
     case 6:
       Serial.println("Over Current"); 
       DesiredCurrent=0;
       AirStarve_Set=0;
-      Desired_Fan_Speed=250;
+      Desired_Temperature=40;
       break;
     case 7:
       Serial.println("Cell voltage is too high"); 
       DesiredCurrent=0;
       AirStarve_Set=0;
-      Desired_Fan_Speed=250;
+      Desired_Temperature=40;
       break;
     case 8:
       Serial.println("Cell voltage is too low"); 
       DesiredCurrent=0;
       AirStarve_Set=0;
-      Desired_Fan_Speed=250;
+      Desired_Temperature=40;
       break;
     case 9:
       Serial.println("Battery Voltage is too Low"); 
       DesiredCurrent=0;
       AirStarve_Set=0;
-      Desired_Fan_Speed=250;
+      Desired_Temperature=40;
       break;
     case 10:
       AirStarve_Set=1;
@@ -137,8 +135,20 @@ switch (Pi_Status) {
   
  
 //Fans:
-Setpoint1= Desired_Fan_Speed;
-Input1= Fan_Speed;
+//if the temperature is 50 degrees, a value of 100 is sent from the pi 
+//max temperature is 85 degrees 
+if (Load_Temperature > 140){
+  Current_Temperature=Load_Temperature;
+}
+else if (Control_Temperature >140){
+  Current_Temperature=Control_Temperature ;
+}
+else{
+  Current_Temperature= ((Control_Temperature+Load_Temperature)/2);
+}
+
+Setpoint1= Desired_Temperature;
+Input1= Current_Temperature;
 fansPID.Compute();
 analogWrite(12,Output);
 //The PID controller is designed to vary its output within a given range. By default this range is 0-255:
@@ -206,7 +216,7 @@ void saftey_pin()  //interupt saftey pin
 {                   
    DesiredCurrent=0;
    AirStarve_Set=0;
-   Desired_Fan_Speed=250;                              
+   Desired_Temperature=40;                            
    Serial.println("Saftey Button Interrupt");
 }
 
@@ -223,7 +233,7 @@ void  Read_From_Atmega() {
  if (CurrentCurrent > 60){
       DesiredCurrent=0;
       AirStarve_Set=0;
-      Desired_Fan_Speed=250;
+      Desired_Temperature=20;
       Atmega_Status=6;
       //what number is max desired fan speed 
  }
@@ -245,8 +255,8 @@ while ( Wire.available()) { // loop through all but the last
     }
   Pi_Status=c[1];
   Desired_Temperature=c[2];
-  Load_Temperature=c[3]
-  Control_Temperature=c[4]  
+  Load_Temperature=c[3];
+  Control_Temperature=c[4];
   DesiredCurrent=c[5];
   wdt_reset();
 
