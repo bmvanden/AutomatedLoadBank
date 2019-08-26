@@ -1,4 +1,5 @@
 import configuration as cfg
+from AppFiles import I2CThread
 
 class EcoCarModel:
     def __init__(self):
