@@ -48,7 +48,7 @@ class GUIThread (threading.Thread):
             time.sleep(0.1)
             
             # Temp line for debugging
-            EcoCar.refreshI2CData(I2CThread)
+            EcoCar.refreshI2CData()
         
 
 
