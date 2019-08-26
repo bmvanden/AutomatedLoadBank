@@ -25,7 +25,7 @@ class EcoCarModel:
         batteryVoltage = 0      # volts - 12V internal battery voltage
         
     def refreshI2CData(target):
-        if target.readErrorCounter == 0:
+        if target.readErrCounter == 0:
             # Update data to send to ATMega over I2C. I2C interface only
             # supports integers from 0-255, so real values are doubled and 
             # converted to int to reduce step size.
