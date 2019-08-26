@@ -24,22 +24,22 @@ class EcoCarModel:
         actualLoadVoltage = 0   # volts - fuel cell voltage
         batteryVoltage = 0      # volts - 12V internal battery voltage
         
-    def refreshI2CData(target):
+    def refreshI2CData():
         if target.readErrCounter == 0:
             # Update data to send to ATMega over I2C. I2C interface only
             # supports integers from 0-255, so real values are doubled and 
             # converted to int to reduce step size.
-            target.PiData = [PiStatus, int(desiredEnclTemp * 2), int(actualLoadTemp * 2),
+            I2CThread.PiData = [PiStatus, int(desiredEnclTemp * 2), int(actualLoadTemp * 2),
                              int(actualContrTemp * 2), int(targetLoadCurrent * 2)]
             
             # Update data received from ATMega over I2C. 
-            ATMegaStatus = target.ATMegaData[0]
-            actualLoadCurrent = ((511-((target.ATMegaData[1]<<8) 
-            	+ (target.ATMegaData[2])))*0.168)
-            actualLoadVoltage = ((target.ATMegaData[3]<<8) 
-            	+ (target.ATMegaData[4]))*(0.0478)
-            batteryVoltage = ((target.ATMegaData[5]<<8) 
-            	+ (target.ATMegaData[6]))*(0.0146)
+            ATMegaStatus = I2CThread.ATMegaData[0]
+            actualLoadCurrent = ((511-((I2CThread.ATMegaData[1]<<8) 
+            	+ (I2CThread.ATMegaData[2])))*0.168)
+            actualLoadVoltage = ((I2CThread.ATMegaData[3]<<8) 
+            	+ (I2CThread.ATMegaData[4]))*(0.0478)
+            batteryVoltage = ((I2CThread.ATMegaData[5]<<8) 
+            	+ (I2CThread.ATMegaData[6]))*(0.0146)
 
             print("From refreshI2CData")
             print(actualLoadCurrent)
