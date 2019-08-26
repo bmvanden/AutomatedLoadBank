@@ -13,14 +13,14 @@ actualLoadCurrent = 0   # amps - actual load on fuel cell
 actualLoadVoltage = 0   # volts - fuel cell voltage
 batteryVoltage = 0      # volts - 12V internal battery voltage
 
-name = none
-conditioningCurrent = none
-conditioningTime = none
-minCurrent = none
-maxCurrent = none
-currentStepSize = none
-currentStepDuration = none
-airStarveTime = none
+name = None
+conditioningCurrent = None
+conditioningTime = None
+minCurrent = None
+maxCurrent = None
+currentStepSize = None
+currentStepDuration = None
+airStarveTime = None
 
 class EcoCarModel:
     def __init__(self):
