@@ -2,7 +2,7 @@ import threading
 import tkinter as tk
 from AppFiles import I2CThread
 import time
-from model import EcoCarModel
+from AppFiles from model import EcoCarModel
 
 class GUIThread (threading.Thread):
     def __init__(self, threadID, name, counter):
