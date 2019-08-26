@@ -1,7 +1,7 @@
 import threading
 import time
 import smbus2
-import model
+
 
 # Holds data to be received from ATMega
 ATMegaData = [0, 1, 3, 50, 80, 0, 0, 5]
