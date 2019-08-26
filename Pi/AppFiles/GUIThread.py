@@ -37,6 +37,9 @@ class GUIThread (threading.Thread):
         #PiDataUpdateButton = tk.Button(root, text="Increment Values", command=)
         #PiDataUpdateButton.pack()
         
+        # Temp line for debugging
+        EcoCar = model.EcoCarModel()
+        
         while 1:
             root.update()
             PiData0.set(I2CThread.PiData[0])
@@ -45,7 +48,7 @@ class GUIThread (threading.Thread):
             time.sleep(0.1)
             
             # Temp line for debugging
-            model.EcoCarModel.refreshI2CData(I2CThread)
+            EcoCar.refreshI2CData(I2CThread)
         
 
 
