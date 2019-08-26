@@ -45,7 +45,7 @@ class GUIThread (threading.Thread):
             PiData0.set(I2CThread.PiData[0])
             PiData1.set(I2CThread.PiData[1])
             PiData2.set(I2CThread.PiData[2])
-            time.sleep(0.1)
+            time.sleep(1)
             
             # Temp line for debugging
             EcoCar.refreshI2CData()

@@ -4,10 +4,10 @@ import smbus2
 
 
 # Holds data to be received from ATMega
-ATMegaData = [0, 1, 3, 50, 80, 0, 0, 5]
+ATMegaData = [0, 0, 0, 0, 0, 0, 0, 0]
 
 # Holds data to be sent to ATMega
-PiData = [3, 10, 0]
+PiData = [0, 0, 0, 0, 0]
 
 readErrCounter = 0
 writeErrCounter = 0
@@ -61,17 +61,18 @@ class I2CThread (threading.Thread):
 
             Address:    8
             Offset:     0
-            # of bytes: 3
+            # of bytes: 5
             """
             try:
                 with smbus2.SMBusWrapper(1) as bus:
-                    bus.write_i2c_block_data(8, 42, [PiData[0],PiData[1],PiData[2]])
-                PiData[0] += 1
-                PiData[1] += 2
-                PiData[2] += 1
-                if PiData[2] > 15:
-                    PiData[2] = 0
-                writeErrCounter = 0
+                    bus.write_i2c_block_data(8, 42, [PiData[0],PiData[1],
+                        PiData[2], PiData[3], PiData[4]])
+                #PiData[0] += 1
+                #PiData[1] += 2
+                #PiData[2] += 1
+                #if PiData[2] > 15:
+                    #PiData[2] = 0
+                #writeErrCounter = 0
             except:
                 #print("Write Error")
                 writeErrCounter += 1
