@@ -2,6 +2,7 @@ import threading
 import tkinter as tk
 from AppFiles import I2CThread
 import time
+from model import EcoCarModel
 
 class GUIThread (threading.Thread):
     def __init__(self, threadID, name, counter):
@@ -44,7 +45,7 @@ class GUIThread (threading.Thread):
             time.sleep(0.1)
             
             # Temp line for debugging
-            model.refreshI2CData(I2CThread)
+            EcoCarModel.refreshI2CData(I2CThread)
         
 
 
