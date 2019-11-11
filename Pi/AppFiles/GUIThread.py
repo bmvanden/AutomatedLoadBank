@@ -2,6 +2,7 @@ import threading
 import tkinter as tk
 from AppFiles import I2CThread
 import time
+from AppFiles import model
 
 class GUIThread (threading.Thread):
     def __init__(self, threadID, name, counter):
@@ -36,13 +37,18 @@ class GUIThread (threading.Thread):
         #PiDataUpdateButton = tk.Button(root, text="Increment Values", command=)
         #PiDataUpdateButton.pack()
         
+        # Temp line for debugging
+        EcoCar = model.EcoCarModel()
+        
         while 1:
             root.update()
             PiData0.set(I2CThread.PiData[0])
             PiData1.set(I2CThread.PiData[1])
             PiData2.set(I2CThread.PiData[2])
-            time.sleep(0.1)
+            time.sleep(1)
             
+            # Temp line for debugging
+            EcoCar.refreshI2CData()
         
 
 
