@@ -150,7 +150,7 @@ else{
 Setpoint1= Desired_Temperature;
 Input1= Current_Temperature;
 fansPID.Compute();
-analogWrite(12,Output);
+analogWrite(12,Output1);
 //The PID controller is designed to vary its output within a given range. By default this range is 0-255:
 
 // Load Control
